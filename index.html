@@ -45,13 +45,13 @@
             // Create the blank for the cloze section
             const blank = '_______';
 
-            // Replace the cloze deletion with a blank
-            const sentenceWithBlank = sentence.replace(match[0], blank);
+            // Replace the cloze deletion with a blank in the sentence
+            let sentenceWithBlank = sentence.replace(match[0], blank);
 
-            // Add the flashcard (Question: with the blank, Answer: only the cloze value)
+            // Create the flashcard: Question (sentence with blank), Answer (cloze value only)
             allFlashcards.push({
-              sentenceWithBlank: sentenceWithBlank + `\t${clozeValue}`,
-              sentenceWithAnswer: clozeValue  // Only show the cloze value as the answer
+              sentenceWithBlank: sentenceWithBlank,  // Question with blank
+              sentenceWithAnswer: clozeValue        // Answer: only the cloze value
             });
           });
         }
