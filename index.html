@@ -1,3 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anki to Quizlet Cloze Cards</title>
+</head>
+<body>
+  <h1>Anki Cloze Cards to Quizlet Flashcards</h1>
+
+  <h2>Input 'Notes in Plain Text' from Anki here</h2>
+  <textarea id="inputText" rows="10" cols="80" placeholder="Enter your text here with cloze deletions..."></textarea><br>
+  <button onclick="generateFlashcardsFromInput()">Generate Flashcards</button>
+
+  <h2>Import this to Quizlet</h2>
+  <div id="flashcardsOutput"></div>
+
+  <h2>Remove Cloze Deletion Tags</h2>
+  <textarea id="removeTagsInput" rows="10" cols="80" placeholder="Enter your text here with cloze deletions to remove tags..."></textarea><br>
+  <button onclick="removeClozeTags()">Remove Tags</button>
+
+  <h2>Processed Text (No Tags)</h2>
+  <div id="processedTextOutput"></div>
+
+  <script>
+    function generateFlashcardsFromInput() {
+      const inputText = document.getElementById("inputText").value;
+      const flashcards = generateFlashcards(inputText);
+      displayFlashcards(flashcards);
+    }
+
+    function generateFlashcards(text) {
+      const clozeRegex = /\{\{c\d+::(.*?)\}\}/g;
+      const sentences = text.split('\n');
+      let allFlashcards = [];
+
+      sentences.forEach(sentence => {
+        const clozeMatches = [];
+        let match;
+        while ((match = clozeRegex.exec(sentence)) !== null) {
+          clozeMatches.push(match);
+        }
+
+        if (clozeMatches.length > 0) {
+          clozeMatches.forEach(match => {
+            const clozeValue = match[1];
+            let question = sentence.replace(match[0], '_______');
+            question = question.replace(/\{\{c\d+::(.*?)\}\}/g, '$1');
+            allFlashcards.push({
+              question: question,
+              answer: clozeValue
+            });
+          });
+        }
+      });
+
+      return allFlashcards;
+    }
+
+    function displayFlashcards(flashcards) {
+      const outputDiv = document.getElementById("flashcardsOutput");
+      outputDiv.innerHTML = '';
+
+      if (flashcards.length === 0) {
+        outputDiv.innerHTML = "<p>No flashcards generated. Make sure your input contains cloze deletions (e.g., {{c1::...}}).</p>";
+      } else {
+          flashcards.forEach(card => {
+      const cardDiv = document.createElement("div");
+      cardDiv.innerHTML = <p><strong></strong> ${card.question}	<strong>Answer:</strong> ${card.answer}</p>;  
+      outputDiv.appendChild(cardDiv);
+    });
+
+      }
+    }
+
+    function removeClozeTags() {
+      const inputText = document.getElementById("removeTagsInput").value;
+      const cleanedText = inputText.replace(/\{\{c\d+::(.*?)\}\}/g, '$1'); 
+      document.getElementById("processedTextOutput").innerText = cleanedText;
+    }
+  </script>
+</body>
+</html>
+
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
