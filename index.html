@@ -7,11 +7,20 @@
 </head>
 <body>
   <h1>Flashcard Generator</h1>
-  <textarea id="inputText" rows="10" cols="80" placeholder="Enter your text here..."></textarea><br>
+
+  <h2>Generate Flashcards</h2>
+  <textarea id="inputText" rows="10" cols="80" placeholder="Enter your text here with cloze deletions..."></textarea><br>
   <button onclick="generateFlashcardsFromInput()">Generate Flashcards</button>
 
   <h2>Generated Flashcards</h2>
   <div id="flashcardsOutput"></div>
+
+  <h2>Remove Cloze Deletion Tags</h2>
+  <textarea id="removeTagsInput" rows="10" cols="80" placeholder="Enter your text with cloze deletions to remove tags..."></textarea><br>
+  <button onclick="removeClozeTags()">Remove Tags</button>
+
+  <h2>Processed Text (No Tags)</h2>
+  <div id="processedTextOutput"></div>
 
   <script>
     function generateFlashcardsFromInput() {
@@ -21,37 +30,25 @@
     }
 
     function generateFlashcards(text) {
-      // Regular expression to match cloze deletions (e.g., {{c1::...}})
       const clozeRegex = /\{\{c\d+::(.*?)\}\}/g;
-
-      // Split the input text by new lines to handle each line separately
       const sentences = text.split('\n');
-
       let allFlashcards = [];
 
       sentences.forEach(sentence => {
         const clozeMatches = [];
         let match;
-        // Find all cloze deletions in the current sentence
         while ((match = clozeRegex.exec(sentence)) !== null) {
           clozeMatches.push(match);
         }
 
         if (clozeMatches.length > 0) {
-          // For each cloze match, create a flashcard
           clozeMatches.forEach(match => {
-            const clozeValue = match[1];  // The value inside the cloze deletion (the part to be hidden)
-            
-            // Create the question by replacing just this cloze deletion with a blank
+            const clozeValue = match[1];
             let question = sentence.replace(match[0], '_______');
-            
-            // Remove the cloze bracket notation (keeping just the value inside)
-            question = question.replace(/\{\{c\d+::(.*?)\}\}/g, '$1'); // Remove cloze tags
-
-            // Add the flashcard: The sentence with the blank, and the answer (cloze value only)
+            question = question.replace(/\{\{c\d+::(.*?)\}\}/g, '$1');
             allFlashcards.push({
-              question: question,  // Question with only one blank
-              answer: clozeValue   // Answer is the cloze value
+              question: question,
+              answer: clozeValue
             });
           });
         }
@@ -62,21 +59,24 @@
 
     function displayFlashcards(flashcards) {
       const outputDiv = document.getElementById("flashcardsOutput");
-      outputDiv.innerHTML = ''; // Clear any previous output
+      outputDiv.innerHTML = '';
 
       if (flashcards.length === 0) {
         outputDiv.innerHTML = "<p>No flashcards generated. Make sure your input contains cloze deletions (e.g., {{c1::...}}).</p>";
       } else {
         flashcards.forEach(card => {
           const cardDiv = document.createElement("div");
-
-          // Display the question and answer
           cardDiv.innerHTML = `<p><strong>Question:</strong> ${card.question}</p>`;
           cardDiv.innerHTML += `<p><strong>Answer:</strong> ${card.answer}</p>`;
-
           outputDiv.appendChild(cardDiv);
         });
       }
+    }
+
+    function removeClozeTags() {
+      const inputText = document.getElementById("removeTagsInput").value;
+      const cleanedText = inputText.replace(/\{\{c\d+::(.*?)\}\}/g, '$1'); // Remove cloze tags
+      document.getElementById("processedTextOutput").innerText = cleanedText;
     }
   </script>
 </body>
