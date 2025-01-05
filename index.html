@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flashcard Generator</title>
+  <title>Anki to Quizlet Cloze Cards</title>
 </head>
 <body>
-  <h1>Flashcard Generator</h1>
+  <h1>Anki Cloze Cards to Quizlet Flashcards</h1>
 
-  <h2>Generate Flashcards</h2>
+  <h2>Input 'Notes in Plain Text' from Anki here</h2>
   <textarea id="inputText" rows="10" cols="80" placeholder="Enter your text here with cloze deletions..."></textarea><br>
   <button onclick="generateFlashcardsFromInput()">Generate Flashcards</button>
 
-  <h2>Generated Flashcards</h2>
+  <h2>Import this to Quizlet</h2>
   <div id="flashcardsOutput"></div>
 
   <h2>Remove Cloze Deletion Tags</h2>
@@ -66,7 +66,7 @@
       } else {
           flashcards.forEach(card => {
       const cardDiv = document.createElement("div");
-      cardDiv.innerHTML = `<p><strong></strong> ${card.question}	<strong>Answer:</strong> ${card.answer}</p>`;  // Tab between question and answer
+      cardDiv.innerHTML = `<p><strong></strong> ${card.question}	<strong>Answer:</strong> ${card.answer}</p>`;  
       outputDiv.appendChild(cardDiv);
     });
 
@@ -75,7 +75,7 @@
 
     function removeClozeTags() {
       const inputText = document.getElementById("removeTagsInput").value;
-      const cleanedText = inputText.replace(/\{\{c\d+::(.*?)\}\}/g, '$1'); // Remove cloze tags
+      const cleanedText = inputText.replace(/\{\{c\d+::(.*?)\}\}/g, '$1'); 
       document.getElementById("processedTextOutput").innerText = cleanedText;
     }
   </script>
