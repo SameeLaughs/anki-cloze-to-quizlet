@@ -45,7 +45,7 @@
           clozeMatches.forEach(match => {
             const clozeValue = match[1];  // The value inside the cloze deletion (the part to be hidden)
 
-            // Replace the cloze deletion with a blank in the sentence
+            // Replace the cloze deletion with a blank in the sentence (just the word, not the entire sentence)
             sentenceWithBlanks = sentenceWithBlanks.replace(match[0], '_______');
             answers.push(clozeValue);
           });
