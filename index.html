@@ -22,7 +22,7 @@
 
     function generateFlashcards(text) {
       // Regular expression to match cloze deletions (e.g., {{c1::...}})
-      const clozeRegex = /\{\{c(\d+)::(.*?)\}\}/g;
+      const clozeRegex = /\{\{c\d+::(.*?)\}\}/g;
 
       // Split the input text by new lines to handle each line separately
       const sentences = text.split('\n');
@@ -38,24 +38,22 @@
         }
 
         if (clozeMatches.length > 0) {
-          // For each match (cloze deletion), create flashcards
+          let sentenceWithBlanks = sentence;
+          let answers = [];
+
+          // Process each cloze deletion and replace with blanks
           clozeMatches.forEach(match => {
-            const clozeValue = match[2];  // The value inside the cloze deletion
+            const clozeValue = match[1];  // The value inside the cloze deletion (the part to be hidden)
 
-            // Create the blank for the cloze section
-            const blank = '_______';
+            // Replace the cloze deletion with a blank in the sentence
+            sentenceWithBlanks = sentenceWithBlanks.replace(match[0], '_______');
+            answers.push(clozeValue);
+          });
 
-            // Replace the cloze deletion with a blank in the sentence (remove the {{c#::...}} part)
-            let sentenceWithBlank = sentence.replace(match[0], blank);
-
-            // Clean the sentence by removing the {{c#::...}} brackets and labels, just leaving the text
-            let cleanSentence = sentence.replace(clozeRegex, blank);  // Replace all cloze sections with blanks
-
-            // Create the flashcard: Question (sentence with blank), Answer (cloze value only)
-            allFlashcards.push({
-              sentenceWithBlank: cleanSentence,  // Question with blank (no {{c#::...}})
-              sentenceWithAnswer: clozeValue    // Answer: only the cloze value
-            });
+          // Create the flashcard: Question (sentence with blank), Answer (cloze value only)
+          allFlashcards.push({
+            sentenceWithBlank: sentenceWithBlanks,  // Question with blank
+            answers: answers                      // Answer: all cloze values
           });
         }
       });
@@ -72,8 +70,11 @@
       } else {
         flashcards.forEach(card => {
           const cardDiv = document.createElement("div");
-          cardDiv.innerHTML = `<p><strong>Question:</strong> ${card.sentenceWithBlank}</p>
-                              <p><strong>Answer:</strong> ${card.sentenceWithAnswer}</p>`;
+
+          // Display the question (sentence with blanks) and answer
+          cardDiv.innerHTML = `<p><strong>Question:</strong> ${card.sentenceWithBlank}</p>`;
+          cardDiv.innerHTML += `<p><strong>Answer:</strong> ${card.answers.join(', ')}</p>`;
+
           outputDiv.appendChild(cardDiv);
         });
       }
