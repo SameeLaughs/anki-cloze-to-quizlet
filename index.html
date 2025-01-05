@@ -64,10 +64,21 @@
       if (flashcards.length === 0) {
         outputDiv.innerHTML = "<p>No flashcards generated. Make sure your input contains cloze deletions (e.g., {{c1::...}}).</p>";
       } else {
-        flashcards.forEach(card => {
+        let lineCount = 0;
+        flashcards.forEach((card, index) => {
           const cardDiv = document.createElement("div");
           cardDiv.innerHTML = `<p><strong>Question:</strong> ${card.question}</p>`;
-          cardDiv.innerHTML += `<p><strong>Answer:</strong>	${card.answer}</p>`;  // Add a tab between the question and the answer
+          cardDiv.innerHTML += `<p><strong>Answer:</strong> ${card.answer}</p>`;
+
+          lineCount++;
+          
+          if (lineCount % 2000 === 0) {
+            const specialMessage = document.createElement("p");
+            specialMessage.style.fontStyle = "italic";
+            specialMessage.innerText = `This is the 2000th line of flashcards.`;
+            outputDiv.appendChild(specialMessage);
+          }
+
           outputDiv.appendChild(cardDiv);
         });
       }
@@ -75,7 +86,7 @@
 
     function removeClozeTags() {
       const inputText = document.getElementById("removeTagsInput").value;
-      const cleanedText = inputText.replace(/\{\{c\d+::(.*?)\}\}/g, '$1'); // Remove cloze tags
+      const cleanedText = inputText.replace(/\{\{c\d+::(.*?)\}\}/g, '$1'); // remove cloze tags
       document.getElementById("processedTextOutput").innerText = cleanedText;
     }
   </script>
