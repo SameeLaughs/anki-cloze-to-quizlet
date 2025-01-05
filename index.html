@@ -38,22 +38,18 @@
         }
 
         if (clozeMatches.length > 0) {
-          let sentenceWithBlanks = sentence;
-          let answers = [];
-
-          // Process each cloze deletion and replace with blanks
+          // For each cloze match, create a flashcard
           clozeMatches.forEach(match => {
             const clozeValue = match[1];  // The value inside the cloze deletion (the part to be hidden)
-
-            // Replace the cloze deletion with a blank in the sentence (just the word, not the entire sentence)
-            sentenceWithBlanks = sentenceWithBlanks.replace(match[0], '_______');
-            answers.push(clozeValue);
-          });
-
-          // Create the flashcard: Question (sentence with blank), Answer (cloze value only)
-          allFlashcards.push({
-            sentenceWithBlank: sentenceWithBlanks,  // Question with blank
-            answers: answers                      // Answer: all cloze values
+            
+            // Create the question by replacing just this cloze deletion with a blank
+            let question = sentence.replace(match[0], '_______');
+            
+            // Add the flashcard: The sentence with the blank, and the answer (cloze value only)
+            allFlashcards.push({
+              question: question,  // Question with only one blank
+              answer: clozeValue   // Answer is the cloze value
+            });
           });
         }
       });
@@ -71,9 +67,9 @@
         flashcards.forEach(card => {
           const cardDiv = document.createElement("div");
 
-          // Display the question (sentence with blanks) and answer
-          cardDiv.innerHTML = `<p><strong>Question:</strong> ${card.sentenceWithBlank}</p>`;
-          cardDiv.innerHTML += `<p><strong>Answer:</strong> ${card.answers.join(', ')}</p>`;
+          // Display the question and answer
+          cardDiv.innerHTML = `<p><strong>Question:</strong> ${card.question}</p>`;
+          cardDiv.innerHTML += `<p><strong>Answer:</strong> ${card.answer}</p>`;
 
           outputDiv.appendChild(cardDiv);
         });
