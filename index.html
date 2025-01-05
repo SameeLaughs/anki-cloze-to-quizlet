@@ -45,6 +45,9 @@
             // Create the question by replacing just this cloze deletion with a blank
             let question = sentence.replace(match[0], '_______');
             
+            // Remove the cloze bracket notation (keeping just the value inside)
+            question = question.replace(/\{\{c\d+::(.*?)\}\}/g, '$1'); // Remove cloze tags
+
             // Add the flashcard: The sentence with the blank, and the answer (cloze value only)
             allFlashcards.push({
               question: question,  // Question with only one blank
