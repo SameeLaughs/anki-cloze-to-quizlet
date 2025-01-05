@@ -66,9 +66,9 @@
       } else {
         let lineCount = 0;
         flashcards.forEach((card, index) => {
-          const cardDiv = document.createElement("div");
-          cardDiv.innerHTML = `<p><strong>Question:</strong> ${card.question}</p>`;
-          cardDiv.innerHTML += `<p><strong>Answer:</strong> ${card.answer}</p>`;
+  const cardDiv = document.createElement("div");
+  cardDiv.innerHTML = `<p><strong></strong> ${card.question}	<strong>Answer:</strong> ${card.answer}</p>`;  // Tab between question and answer
+  outputDiv.appendChild(cardDiv);
 
           lineCount++;
           
