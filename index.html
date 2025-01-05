@@ -64,14 +64,12 @@
       if (flashcards.length === 0) {
         outputDiv.innerHTML = "<p>No flashcards generated. Make sure your input contains cloze deletions (e.g., {{c1::...}}).</p>";
       } else {
-        flashcards.forEach(card => {
-          const cardDiv = document.createElement("div");
-          cardDiv.innerHTML = `<p><strong>  </strong> ${card.question}</p>`;
-          cardDiv.innerHTML += `<p><strong>Answer:</strong> ${card.answer}</p>`;
-            cardDiv.innerHTML += '<br><br>';  // Adds two new lines after each answer
+          flashcards.forEach(card => {
+      const cardDiv = document.createElement("div");
+      cardDiv.innerHTML = `<p><strong></strong> ${card.question}	<strong>  </strong> ${card.answer}</p>`;  // Tab between question and answer
+      outputDiv.appendChild(cardDiv);
+    });
 
-          outputDiv.appendChild(cardDiv);
-        });
       }
     }
 
