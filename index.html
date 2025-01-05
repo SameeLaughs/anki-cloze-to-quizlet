@@ -68,6 +68,8 @@
           const cardDiv = document.createElement("div");
           cardDiv.innerHTML = `<p><strong>  </strong> ${card.question}</p>`;
           cardDiv.innerHTML += `<p><strong>Answer:</strong> ${card.answer}</p>`;
+            cardDiv.innerHTML += '<br><br>';  // Adds two new lines after each answer
+
           outputDiv.appendChild(cardDiv);
         });
       }
