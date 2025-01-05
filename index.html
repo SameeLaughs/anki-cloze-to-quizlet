@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anki to Quizlet Cloze Cards</title>
+  <title>Flashcard Generator</title>
 </head>
 <body>
-  <h1>Anki Cloze Cards to Quizlet Flashcards</h1>
+  <h1>Flashcard Generator</h1>
 
-  <h2>Input 'Notes in Plain Text' from Anki here</h2>
+  <h2>Generate Flashcards</h2>
   <textarea id="inputText" rows="10" cols="80" placeholder="Enter your text here with cloze deletions..."></textarea><br>
   <button onclick="generateFlashcardsFromInput()">Generate Flashcards</button>
 
-  <h2>Import this to Quizlet</h2>
+  <h2>Generated Flashcards</h2>
   <div id="flashcardsOutput"></div>
 
   <h2>Remove Cloze Deletion Tags</h2>
@@ -64,18 +64,18 @@
       if (flashcards.length === 0) {
         outputDiv.innerHTML = "<p>No flashcards generated. Make sure your input contains cloze deletions (e.g., {{c1::...}}).</p>";
       } else {
-          flashcards.forEach(card => {
-      const cardDiv = document.createElement("div");
-      cardDiv.innerHTML = <p><strong></strong> ${card.question}	<strong>Answer:</strong> ${card.answer}</p>;  
-      outputDiv.appendChild(cardDiv);
-    });
-
+        flashcards.forEach(card => {
+          const cardDiv = document.createElement("div");
+          cardDiv.innerHTML = `<p><strong>Question:</strong> ${card.question}</p>`;
+          cardDiv.innerHTML += `<p><strong>Answer:</strong>	${card.answer}</p>`;  // Add a tab between the question and the answer
+          outputDiv.appendChild(cardDiv);
+        });
       }
     }
 
     function removeClozeTags() {
       const inputText = document.getElementById("removeTagsInput").value;
-      const cleanedText = inputText.replace(/\{\{c\d+::(.*?)\}\}/g, '$1'); 
+      const cleanedText = inputText.replace(/\{\{c\d+::(.*?)\}\}/g, '$1'); // Remove cloze tags
       document.getElementById("processedTextOutput").innerText = cleanedText;
     }
   </script>
