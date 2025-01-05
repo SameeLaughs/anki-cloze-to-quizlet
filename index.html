@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcard Generator</title>
+</head>
+<body>
+  <h1>Flashcard Generator</h1>
+  <textarea id="inputText" rows="10" cols="80" placeholder="Enter your text here..."></textarea><br>
+  <button onclick="generateFlashcardsFromInput()">Generate Flashcards</button>
+
+  <h2>Generated Flashcards</h2>
+  <div id="flashcardsOutput"></div>
+
+  <script>
+    function generateFlashcardsFromInput() {
+      const inputText = document.getElementById("inputText").value;
+      const flashcards = generateFlashcards(inputText);
+      displayFlashcards(flashcards);
+    }
+
+    function generateFlashcards(text) {
+      // Regular expression to match cloze deletions (e.g., {{c1::...}})
+      const clozeRegex = /\{\{c(\d+)::(.*?)\}\}/g;
+
+      // Split the input text by new lines to handle each line separately
+      const sentences = text.split('\n');
+
+      let allFlashcards = [];
+
+      sentences.forEach(sentence => {
+        const clozeMatches = [];
+        let match;
+        // Find all cloze deletions in the current sentence
+        while ((match = clozeRegex.exec(sentence)) !== null) {
+          clozeMatches.push(match);
+        }
+
+        if (clozeMatches.length > 0) {
+          // For each match (cloze deletion), create flashcards
+          clozeMatches.forEach(match => {
+            const clozeValue = match[2];  // The value inside the cloze deletion
+
+            // Create the blank for the cloze section
+            const blank = '_______';
+
+            // Replace the cloze deletion with a blank
+            const sentenceWithBlank = sentence.replace(match[0], blank);
+
+            // Add the flashcard (Question: with the blank, Answer: with the correct cloze value)
+            allFlashcards.push({
+              sentenceWithBlank: sentenceWithBlank + `\t${clozeValue}`,
+              sentenceWithAnswer: clozeValue  // Only show the answer, no full sentence
+            });
+          });
+        }
+      });
+
+      return allFlashcards;
+    }
+
+    function displayFlashcards(flashcards) {
+      const outputDiv = document.getElementById("flashcardsOutput");
+      outputDiv.innerHTML = ''; // Clear any previous output
+
+      if (flashcards.length === 0) {
+        outputDiv.innerHTML = "<p>No flashcards generated. Make sure your input contains cloze deletions (e.g., {{c1::...}}).</p>";
+      } else {
+        flashcards.forEach(card => {
+          const cardDiv = document.createElement("div");
+          cardDiv.innerHTML = `<p><strong>Question:</strong> ${card.sentenceWithBlank}</p>
+                              <p><strong>Answer:</strong> ${card.sentenceWithAnswer}</p>`;
+          outputDiv.appendChild(cardDiv);
+        });
+      }
+    }
+  </script>
+</body>
+</html>
