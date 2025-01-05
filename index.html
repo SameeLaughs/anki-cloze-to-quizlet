@@ -64,12 +64,14 @@
       if (flashcards.length === 0) {
         outputDiv.innerHTML = "<p>No flashcards generated. Make sure your input contains cloze deletions (e.g., {{c1::...}}).</p>";
       } else {
-          flashcards.forEach(card => {
-      const cardDiv = document.createElement("div");
-      cardDiv.innerHTML = `<p><strong></strong> ${card.question}	<strong>Answer:</strong> ${card.answer}</p>`;  
-      outputDiv.appendChild(cardDiv);
-    });
-
+        flashcards.forEach((card, index) => {
+          // Only display every 2000th flashcard
+          if (index % 2000 === 0) {
+            const cardDiv = document.createElement("div");
+            cardDiv.innerHTML = `<p><strong></strong> ${card.question}	<strong>Answer:</strong> ${card.answer}</p>`;  
+            outputDiv.appendChild(cardDiv);
+          }
+        });
       }
     }
 
