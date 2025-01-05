@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcard Generator</title>
+</head>
+<body>
+  <h1>Flashcard Generator</h1>
+  <textarea id="inputText" rows="10" cols="80" placeholder="Enter your text here..."></textarea><br>
+  <button onclick="generateFlashcardsFromInput()">Generate Flashcards</button>
+
+  <h2>Generated Flashcards</h2>
+  <div id="flashcardsOutput"></div>
+
+  <script>
+    function generateFlashcardsFromInput() {
+      const inputText = document.getElementById("inputText").value;
+      const flashcards = generateFlashcards(inputText);
+      displayFlashcards(flashcards);
+    }
+
+    function generateFlashcards(text) {
+      // Regular expression to match cloze deletions (e.g., {{c1::...}})
+      const clozeRegex = /\{\{c(\d+)::(.*?)\}\}/g;
+
+      // Function to process the input text and generate flashcards
+      const generateCard = (sentence, clozeMatches) => {
+        let flashcards = [];
+
+        // Create a flashcard for each cloze deletion
+        clozeMatches.forEach(match => {
+          const clozeIndex = match[1];  // Index of the cloze (c1, c2, etc.)
+          const clozeValue = match[2];  // The value inside the cloze deletion
+
+          // Create the blank for the cloze section
+          const blank = '_______';
+
+          // Create three variations of the sentence for the flashcard:
+          // 1. The cloze section is blank, and the answer is shown after the tab
+          const sentenceWithBlank = sentence.replace(match[0], blank) + `\t${clozeValue}`;
+
+          // 2. The cloze section has the answer inserted in the blank spot
+          const sentenceWithAnswer = sentence.replace(match[0], clozeValue);
+
+          flashcards.push({
+            sentenceWithBlank: sentenceWithBlank,
+            sentenceWithAnswer: sentenceWithAnswer
+          });
+        });
+
+        return flashcards;
+      };
+
+      // Split the input text into sentences
+      const sentences = text.split('\n');
+
+      let allFlashcards = [];
+
+      sentences.forEach(sentence => {
+        const clozeMatches = [];
+        let match;
+        while ((match = clozeRegex.exec(sentence)) !== null) {
+          clozeMatches.push(match);
+        }
+
+        if (clozeMatches.length > 0) {
+          const flashcards = generateCard(sentence, clozeMatches);
+          allFlashcards = allFlashcards.concat(flashcards);
+        }
+      });
+
+      return allFlashcards;
+    }
+
+    function displayFlashcards(flashcards) {
+      const outputDiv = document.getElementById("flashcardsOutput");
+      outputDiv.innerHTML = ''; // Clear any previous output
+
+      if (flashcards.length === 0) {
+        outputDiv.innerHTML = "<p>No flashcards generated. Make sure your input contains cloze deletions (e.g., {{c1::...}}).</p>";
+      } else {
+        flashcards.forEach(card => {
+          const cardDiv = document.createElement("div");
+          cardDiv.innerHTML = `<p><strong>Question:</strong> ${card.sentenceWithBlank}</p>
+                              <p><strong>Answer:</strong> ${card.sentenceWithAnswer}</p>`;
+          outputDiv.appendChild(cardDiv);
+        });
+      }
+    }
+  </script>
+</body>
+</html>
