@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flashcard Generator</title>
+  <title>ANKI CLOZE TO QUIZLET</title>
 </head>
 <body>
-  <h1>Flashcard Generator</h1>
+  <h1>Quizlet Clozes</h1>
 
   <h2>Generate Flashcards</h2>
   <textarea id="inputText" rows="10" cols="80" placeholder="Enter your text here with cloze deletions..."></textarea><br>
@@ -72,10 +72,10 @@
 
           lineCount++;
           
-          if (lineCount % 2000 === 0) {
+          if (lineCount % 500 === 0) {
             const specialMessage = document.createElement("p");
             specialMessage.style.fontStyle = "italic";
-            specialMessage.innerText = `This is the 2000th line of flashcards.`;
+            specialMessage.innerText = `500 flashcards have passed, since the last.`;
             outputDiv.appendChild(specialMessage);
           }
 
