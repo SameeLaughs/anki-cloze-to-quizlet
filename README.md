@@ -8,4 +8,4 @@
 6. Paste it into the import your data thing
 7. Between the term and definition, write "Answer:"
 8. Between the cards, choose "new Line'
-9. Woohoo!
+9. lowk these are just notes for myself lmao
